@@ -1,83 +1,38 @@
 import streamlit as st
 import google.generativeai as genai
-from PIL import Image
 
-# Page Configuration
-st.set_page_config(page_title="Sherlock – Property Auditor", layout="wide")
-st.title("🕵️‍♂️ Sherlock – The Property Auditor")
+st.title("👨‍⚕️ Diagnóstico de Conexión")
 
-# 1. Secure API Key Configuration
+# 1. Verificar versión de la librería
+st.write(f"**Versión de la librería de Google:** `{genai.__version__}`")
+
+# 2. Verificar API Key
 try:
     api_key = st.secrets["GEMINI_API_KEY"]
+    st.success("✅ API Key encontrada en Secrets.")
     genai.configure(api_key=api_key)
 except Exception as e:
-    st.error("⚠️ Error: API Key not found in Streamlit secrets.")
+    st.error(f"❌ Error con la API Key: {e}")
     st.stop()
 
-# 2. System Instructions (Updated to English)
-system_instruction = """
-You are an expert property auditor named Sherlock. 
-Your task is to analyze property images to identify construction details, condition status, materials, and potential maintenance issues.
-Always respond in English. Be professional, concise, and direct.
-"""
+# 3. Listar modelos disponibles
+st.write("---")
+st.subheader("📋 Modelos disponibles para tu Clave:")
+st.write("Consultando a Google... (esto puede tardar unos segundos)")
 
-# Model Configuration
-model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash-001",  # <--- Nombre técnico exacto
-    system_instruction=system_instruction
-)
-
-# 3. Sidebar for Image Upload
-with st.sidebar:
-    st.header("📸 Upload Evidence")
-    uploaded_file = st.file_uploader("Upload a property photo:", type=["jpg", "jpeg", "png"])
+try:
+    modelos = []
+    for m in genai.list_models():
+        # Filtramos solo los que sirven para generar contenido (chat)
+        if 'generateContent' in m.supported_generation_methods:
+            modelos.append(m.name)
+            st.code(m.name) # Muestra el nombre exacto en pantalla
     
-    image = None
-    if uploaded_file is not None:
-        image = Image.open(uploaded_file)
-        st.image(image, caption="Uploaded Image", use_container_width=True)
-        st.success("Image ready for analysis.")
+    if not modelos:
+        st.error("⚠️ Tu API Key funciona, pero Google dice que NO tienes acceso a ningún modelo. ¿Creaste la clave en AI Studio o en Google Cloud?")
+    else:
+        st.balloons()
+        st.success("¡Conexión exitosa! Copia uno de los nombres de arriba.")
 
-# 4. Chat History
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
-# Display previous messages
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
-
-# 5. Chat Logic
-if prompt := st.chat_input("Type your message here..."):
-    
-    # Display user message
-    with st.chat_message("user"):
-        st.markdown(prompt)
-    st.session_state.messages.append({"role": "user", "content": prompt})
-
-    # Generate response
-    try:
-        # Prepare history
-        history_history = [
-            {"role": m["role"], "parts": [m["content"]]} 
-            for m in st.session_state.messages[:-1]
-        ]
-        chat = model.start_chat(history=history_history)
-        
-        # Send message (with or without image)
-        if image:
-            response = chat.send_message([prompt, image])
-        else:
-            response = chat.send_message(prompt)
-            
-        text_response = response.text
-        
-        # Display assistant response
-        with st.chat_message("assistant"):
-            st.markdown(text_response)
-        st.session_state.messages.append({"role": "model", "content": text_response})
-        
-    except Exception as e:
-        st.error(f"An error occurred: {e}")
-
-
+except Exception as e:
+    st.error(f"❌ Error fatal al conectar con Google: {e}")
