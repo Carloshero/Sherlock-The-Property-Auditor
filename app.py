@@ -20,9 +20,9 @@ genai.configure(api_key=api_key)
 
 # 2. Inicializar el modelo
 # PEGA AQUÍ LAS INSTRUCCIONES DE TU GEM ENTRE LAS COMILLAS TRIPLES
-instrucciones_del_sistema = "Analyzes property photos to estimate repair costs, spot red flags, and calculate ROI."
-Eres un asistente útil y amable. Responde siempre de forma concisa.
-(Reemplaza este texto con el prompt de tu Gem original)
+instrucciones_del_sistema = """
+Analyzes property photos to estimate repair costs, spot red flags, and calculate ROI.
+"""
 
 
 model = genai.GenerativeModel(
@@ -68,3 +68,4 @@ if prompt := st.chat_input("To get started, upload any room or area, to get cost
     except Exception as e:
 
         st.error(f"Ocurrió un error: {e}")
+
