@@ -23,7 +23,7 @@ Always respond in English. Be professional, concise, and direct.
 
 # Model Configuration
 model = genai.GenerativeModel(
-    model_name="gemini-1.5-pro",
+    model_name="gemini-1.5-flash-001",  # <--- Nombre técnico exacto
     system_instruction=system_instruction
 )
 
@@ -79,4 +79,5 @@ if prompt := st.chat_input("Type your message here..."):
         
     except Exception as e:
         st.error(f"An error occurred: {e}")
+
 
