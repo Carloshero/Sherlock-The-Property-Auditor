@@ -23,7 +23,7 @@ genai.configure(api_key=api_key)
 instrucciones_del_sistema = "Analyzes property photos to estimate repair costs, spot red flags, and calculate ROI."
 Eres un asistente útil y amable. Responde siempre de forma concisa.
 (Reemplaza este texto con el prompt de tu Gem original)
-"""
+
 
 model = genai.GenerativeModel(
     model_name="gemini-1.5-flash",
@@ -66,4 +66,5 @@ if prompt := st.chat_input("To get started, upload any room or area, to get cost
         st.session_state.messages.append({"role": "model", "content": text_response})
         
     except Exception as e:
+
         st.error(f"Ocurrió un error: {e}")
