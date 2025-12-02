@@ -23,8 +23,9 @@ Always respond in English. Be professional, concise, and direct.
 
 # 3. Model Configuration (UPDATED to Gemini 2.5)
 # ¡AQUÍ ESTABA EL ERROR! Ahora usamos el nombre exacto de tu lista:
+# Cambiamos del 2.5 al 2.0 que suele tener más cupo gratuito
 model = genai.GenerativeModel(
-    model_name="gemini-2.5-flash", 
+    model_name="gemini-2.0-flash", 
     system_instruction=system_instruction
 )
 
@@ -84,3 +85,4 @@ if prompt := st.chat_input("Type your message here..."):
         
     except Exception as e:
         st.error(f"An error occurred: {e}")
+
