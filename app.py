@@ -10,7 +10,7 @@ st.title("Sherlock — The Property Auditor By AgentCoachAi")
 # 1. Configuración de la API Key (La tomamos de los secretos de Streamlit para seguridad)
 # Si estás probando en tu PC local, asegúrate de tener tu API Key a mano.
 try:
-    api_key = st.secrets["AIzaSyAyGv_kk0YK5n3Bjl2HzWaWM16uQ6rMjLI"]
+    api_key = st.secrets["AIzaSyDPcg69fI1_25-i8OWjESWgWbq6PblR2h4"]
 except:
     # Esto es solo para que no de error si no has configurado la clave aún
     st.error("⚠️ Falta la API Key. Configúrala en los secretos de Streamlit.")
@@ -68,4 +68,5 @@ if prompt := st.chat_input("To get started, upload any room or area, to get cost
     except Exception as e:
 
         st.error(f"Ocurrió un error: {e}")
+
 
